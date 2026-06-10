@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ biz.name }}{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{{ url_for('index') }}">Portfolio</a>
+  <span>/</span>
+  <a href="{{ url_for('business_detail', business_id=biz.id) }}">{{ biz.name }}</a>
+  <span>/</span>
+  <span>Edit</span>
+</div>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Edit {{ biz.name }}</h1>
+    <p class="page-sub">Update business details and plan content.</p>
+  </div>
+</div>
+
+<form method="POST" action="{{ url_for('edit_business', business_id=biz.id) }}">
+
+  <!-- Basic details -->
+  <div class="card" style="margin-bottom:16px;">
+    <p class="card-title">Basic details</p>
+    <div class="form-row">
+      <div class="form-group" style="flex:2;">
+        <label class="form-label">Business name *</label>
+        <input type="text" name="name" class="form-input" value="{{ biz.name }}" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sector</label>
+        <input type="text" name="sector" class="form-input" value="{{ biz.sector }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input type="text" name="location" class="form-input" value="{{ biz.location }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Founded</label>
+        <input type="text" name="founded" class="form-input" value="{{ biz.founded }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Founder</label>
+        <input type="text" name="founder" class="form-input" value="{{ biz.founder }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Stage</label>
+        <select name="stage" class="form-input">
+          {% for s in ['Idea stage','Building','Active','Scaling'] %}
+          <option value="{{ s }}" {% if s == biz.stage %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card colour</label>
+        <select name="color" class="form-input">
+          {% for c in ['blue','teal','green','amber','coral','purple'] %}
+          <option value="{{ c }}" {% if c == biz.get('color','blue') %}selected{% endif %}>
+            {{ c|capitalize }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Short description</label>
+      <input type="text" name="description" class="form-input" value="{{ biz.description }}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">About (detailed)</label>
+      <textarea name="about" class="form-input form-textarea">{{ biz.about }}</textarea>
+    </div>
+  </div>
+
+  <!-- Business plan -->
+  <div class="card" style="margin-bottom:16px;">
+    <p class="card-title">Business plan</p>
+    {% set fields = [
+      ('Executive summary',     'exec_summary',           'executive_summary'),
+      ('Problem & solution',    'problem_solution',       'problem_solution'),
+      ('Target market',         'target_market',          'target_market'),
+      ('Revenue model',         'revenue_model',          'revenue_model'),
+      ('Competitive advantage', 'competitive_advantage',  'competitive_advantage'),
+      ('Risks & mitigation',    'risks_mitigation',       'risks_mitigation')
+    ] %}
+    {% for label, field, key in fields %}
+    <div class="form-group">
+      <label class="form-label">{{ label }}</label>
+      <textarea name="{{ field }}" class="form-input form-textarea">{{ biz.plan.get(key, '') }}</textarea>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="form-actions" style="margin-bottom:48px;">
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    <a href="{{ url_for('business_detail', business_id=biz.id) }}" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

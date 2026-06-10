@@ -1,0 +1,521 @@
+{% extends "base.html" %}
+{% block title %}{{ biz.name }}{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="{{ url_for('index') }}">Portfolio</a>
+  <span>/</span>
+  <span>{{ biz.name }}</span>
+</div>
+
+<!-- Business header -->
+<div class="biz-header">
+  <div class="biz-avatar-lg color-bg-{{ biz.color }}">
+    <span class="color-{{ biz.color }}">{{ biz.initials }}</span>
+  </div>
+  <div class="biz-header-info">
+    <div class="biz-header-top">
+      <h1 class="page-title" style="margin:0;">{{ biz.name }}</h1>
+      <span class="badge badge-{{ 'blue' if biz.stage == 'Building' else ('green' if biz.stage == 'Active' or biz.stage == 'Scaling' else 'amber') }}">
+        {{ biz.stage }}
+      </span>
+    </div>
+    <p class="page-sub" style="margin:4px 0 8px;">{{ biz.sector }} &middot; {{ biz.location }}</p>
+    <div class="tag-row">
+      <span class="tag">Est. {{ biz.founded }}</span>
+      <span class="tag">{{ biz.founder }}</span>
+    </div>
+  </div>
+  <div class="biz-header-actions">
+    <a href="{{ url_for('edit_business', business_id=biz.id) }}" class="btn btn-secondary">Edit</a>
+    <form method="POST" action="{{ url_for('delete_business', business_id=biz.id) }}" style="display:inline;">
+      <button type="submit" class="btn btn-danger-outline"
+        onclick="return confirm('Delete {{ biz.name }} and all its data? This cannot be undone.')">
+        Delete
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Tab navigation -->
+<div class="tab-nav">
+  <button class="tab-btn {% if tab == 'overview' %}active{% endif %}" onclick="switchTab('overview', this)">Overview</button>
+  <button class="tab-btn {% if tab == 'plan' %}active{% endif %}" onclick="switchTab('plan', this)">Business plan</button>
+  <button class="tab-btn {% if tab == 'revenue' %}active{% endif %}" onclick="switchTab('revenue', this)">Revenue</button>
+  <button class="tab-btn {% if tab == 'kpis' %}active{% endif %}" onclick="switchTab('kpis', this)">KPIs</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 1: OVERVIEW
+════════════════════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-section {% if tab == 'overview' %}active{% endif %}">
+
+  <!-- KPI summary strip -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <p class="metric-label">Total revenue (KES)</p>
+      <p class="metric-value">{{ "{:,.0f}".format(rev.total) }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">This month</p>
+      <p class="metric-value">{{ "{:,.0f}".format(rev.this_month) }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">MoM growth</p>
+      <p class="metric-value {% if rev.mom_change and rev.mom_change > 0 %}text-green{% elif rev.mom_change and rev.mom_change < 0 %}text-red{% endif %}">
+        {% if rev.mom_change is not none %}{{ rev.mom_change }}%{% else %}—{% endif %}
+      </p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Stage</p>
+      <p class="metric-value" style="font-size:15px;">{{ biz.stage }}</p>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="card">
+    <p class="card-title">About this business</p>
+    <p class="card-text">{{ biz.description or 'No description yet. Edit this business to add one.' }}</p>
+    {% if biz.about and biz.about != biz.description %}
+    <p class="card-text" style="margin-top:10px;">{{ biz.about }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Revenue streams -->
+  <div class="card">
+    <div class="card-header-row">
+      <p class="card-title" style="margin:0;">Revenue streams</p>
+      <button class="btn btn-secondary btn-sm" onclick="toggleSection('addStreamForm')">+ Add stream</button>
+    </div>
+
+    {% if biz.revenue_streams %}
+    <div style="margin-top:12px;">
+      {% for i, stream in enumerate(biz.revenue_streams) %}
+      <div class="stream-row">
+        <div class="stream-icon color-bg-{{ stream.status_color }}">
+          <span class="color-{{ stream.status_color }}">$</span>
+        </div>
+        <div class="stream-info">
+          <p class="stream-name">{{ stream.name }}</p>
+          <p class="stream-desc">{{ stream.description }}</p>
+        </div>
+        <span class="badge badge-{{ stream.status_color }}">{{ stream.status }}</span>
+        <form method="POST" action="{{ url_for('delete_stream', business_id=biz.id) }}" style="display:inline;">
+          <input type="hidden" name="idx" value="{{ i }}">
+          <button type="submit" class="btn-icon btn-danger"
+            onclick="return confirm('Remove this revenue stream?')">&#10005;</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="card-text" style="margin-top:10px;">No revenue streams added yet.</p>
+    {% endif %}
+
+    <!-- Add stream form -->
+    <div id="addStreamForm" class="inline-form" style="display:none;margin-top:14px;">
+      <form method="POST" action="{{ url_for('add_stream', business_id=biz.id) }}">
+        <div class="form-row">
+          <div class="form-group" style="flex:2;">
+            <label class="form-label">Stream name</label>
+            <input type="text" name="stream_name" class="form-input" placeholder="e.g. MEAL consultancy" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select name="stream_status" class="form-input">
+              <option>Primary</option><option>Growing</option>
+              <option selected>Planned</option><option>Active</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <input type="text" name="stream_desc" class="form-input" placeholder="Brief description of this revenue stream">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Add stream</button>
+          <button type="button" class="btn btn-secondary" onclick="toggleSection('addStreamForm')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Setup progress -->
+  {% if biz.setup_progress %}
+  <div class="card">
+    <p class="card-title">Setup progress</p>
+    {% for i, item in enumerate(biz.setup_progress) %}
+    <div class="progress-item">
+      <div class="progress-meta">
+        <span class="progress-label">{{ item.label }}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="progress-status {% if item.pct == 100 %}status-done{% elif item.pct > 0 %}status-progress{% else %}status-none{% endif %}">
+            {{ item.status }}
+          </span>
+          <button class="btn-icon" onclick="toggleSection('progressForm{{ i }}')" title="Update progress">&#9998;</button>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill {% if item.pct == 100 %}fill-green{% elif item.pct > 0 %}fill-amber{% else %}fill-gray{% endif %}"
+             style="width:{{ item.pct }}%;"></div>
+      </div>
+      <!-- Inline progress update -->
+      <div id="progressForm{{ i }}" class="inline-form" style="display:none;margin-top:8px;">
+        <form method="POST" action="{{ url_for('update_progress', business_id=biz.id) }}" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <input type="hidden" name="idx" value="{{ i }}">
+          <input type="range" name="pct" min="0" max="100" step="10" value="{{ item.pct }}"
+                 class="range-input" oninput="this.nextElementSibling.textContent = this.value + '%'">
+          <span style="font-size:12px;min-width:36px;">{{ item.pct }}%</span>
+          <button type="submit" class="btn btn-primary btn-sm">Save</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="toggleSection('progressForm{{ i }}')">Cancel</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 2: BUSINESS PLAN
+════════════════════════════════════════════════════════ -->
+<div id="tab-plan" class="tab-section {% if tab == 'plan' %}active{% endif %}">
+
+  <div class="tab-row-header">
+    <p class="card-text">Based on lean startup best practices. Click any section to expand.</p>
+    <a href="{{ url_for('business_plan', business_id=biz.id) }}" class="btn btn-secondary">
+      Full plan &rarr;
+    </a>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden;">
+    {% set plan_sections = [
+      ('Executive summary', 'executive_summary', 'blue'),
+      ('Problem & solution', 'problem_solution', 'coral'),
+      ('Target market', 'target_market', 'green'),
+      ('Revenue model', 'revenue_model', 'amber'),
+      ('Competitive advantage', 'competitive_advantage', 'purple'),
+      ('Risks & mitigation', 'risks_mitigation', 'gray')
+    ] %}
+    {% for title, key, color in plan_sections %}
+    <div class="plan-row" onclick="togglePlan(this)">
+      <div class="plan-row-header">
+        <div class="plan-row-left">
+          <div class="plan-icon color-bg-{{ color }}">
+            <span class="color-{{ color }}" style="font-size:9px;">&#9670;</span>
+          </div>
+          <span class="plan-row-title">{{ title }}</span>
+        </div>
+        <span class="plan-chevron">&#8964;</span>
+      </div>
+      <div class="plan-body">
+        {% set content = biz.plan.get(key, '') %}
+        {% if content %}{{ content }}{% else %}<em style="color:var(--text-tertiary);">Not filled in yet — edit this business to add content.</em>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div style="margin-top:8px;">
+    <a href="{{ url_for('edit_business', business_id=biz.id) }}" class="btn btn-secondary">
+      Edit plan content
+    </a>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 3: REVENUE
+════════════════════════════════════════════════════════ -->
+<div id="tab-revenue" class="tab-section {% if tab == 'revenue' %}active{% endif %}">
+
+  {% if rev.rows %}
+
+  <!-- Summary metrics -->
+  <div class="metrics-grid" style="margin-bottom:20px;">
+    <div class="metric-card">
+      <p class="metric-label">Total revenue</p>
+      <p class="metric-value">KES {{ "{:,.0f}".format(rev.total) }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">This month</p>
+      <p class="metric-value">KES {{ "{:,.0f}".format(rev.this_month) }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">Last month</p>
+      <p class="metric-value">KES {{ "{:,.0f}".format(rev.last_month) }}</p>
+    </div>
+    <div class="metric-card">
+      <p class="metric-label">MoM change</p>
+      <p class="metric-value {% if rev.mom_change and rev.mom_change > 0 %}text-green{% elif rev.mom_change and rev.mom_change < 0 %}text-red{% endif %}">
+        {% if rev.mom_change is not none %}
+          {% if rev.mom_change > 0 %}+{% endif %}{{ rev.mom_change }}%
+        {% else %}—{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card" style="margin-bottom:20px;">
+    <p class="card-title">Revenue trend</p>
+    <div style="position:relative;height:230px;">
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card" style="padding:0;margin-bottom:16px;">
+    <div class="table-header">
+      <p class="card-title" style="margin:0;">Monthly log</p>
+      <button class="btn btn-primary btn-sm" onclick="toggleSection('addRevenueForm')">+ Log entry</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Revenue (KES)</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rev.rows | reverse %}
+          <tr>
+            <td>{{ row.period }}</td>
+            <td class="td-num">{{ "{:,.0f}".format(row.amount) }}</td>
+            <td class="td-notes">{{ row.notes or '—' }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('delete_revenue', business_id=biz.id) }}" style="display:inline;">
+                <input type="hidden" name="year" value="{{ row.year }}">
+                <input type="hidden" name="month" value="{{ row.month }}">
+                <button type="submit" class="btn-icon btn-danger"
+                  onclick="return confirm('Delete the {{ row.period }} entry?')">&#10005;</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% else %}
+  <!-- Empty state -->
+  <div class="empty-state">
+    <div class="empty-icon">&#128200;</div>
+    <p class="empty-title">No revenue recorded yet</p>
+    <p class="empty-desc">Log your first entry and your trend chart will appear here automatically.</p>
+  </div>
+  {% endif %}
+
+  <!-- Add revenue form -->
+  <div class="card {% if not rev.rows %}show-always{% endif %}" id="addRevenueForm"
+       style="{% if rev.rows %}display:none;{% endif %}">
+    <p class="card-title">Log revenue entry</p>
+    <form method="POST" action="{{ url_for('add_revenue', business_id=biz.id) }}">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Year</label>
+          <select name="year" class="form-input">
+            {% for y in [2024, 2025, 2026, 2027] %}
+            <option value="{{ y }}" {% if y == 2026 %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Month</label>
+          <select name="month" class="form-input">
+            {% for i, m in enumerate(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']) %}
+            <option value="{{ i+1 }}" {% if i+1 == 6 %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group" style="flex:2;">
+          <label class="form-label">Amount (KES)</label>
+          <input type="number" name="amount" class="form-input"
+                 placeholder="e.g. 50000" min="0" step="100" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes (optional)</label>
+        <input type="text" name="notes" class="form-input"
+               placeholder="e.g. MEAL consultancy retainer — NGO client">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save entry</button>
+        {% if rev.rows %}
+        <button type="button" class="btn btn-secondary" onclick="toggleSection('addRevenueForm')">Cancel</button>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 4: KPIs
+════════════════════════════════════════════════════════ -->
+<div id="tab-kpis" class="tab-section {% if tab == 'kpis' %}active{% endif %}">
+
+  <p class="card-text" style="margin-bottom:16px;">
+    Track targets vs actuals for {{ biz.name }}.
+    Update actuals at any time to monitor progress.
+  </p>
+
+  {% if biz.kpis %}
+  <div class="card" style="padding:0;margin-bottom:16px;overflow:hidden;">
+    <div class="kpi-table-header">
+      <span>Indicator</span>
+      <span>Target</span>
+      <span>Actual</span>
+      <span>Status</span>
+      <span>Update</span>
+    </div>
+    {% for i, kpi in enumerate(biz.kpis) %}
+    <div class="kpi-row">
+      <div class="kpi-cell-indicator">
+        <p class="kpi-name">{{ kpi.indicator }}</p>
+        <p class="kpi-unit">{{ kpi.unit }}</p>
+      </div>
+      <span class="kpi-target">{{ kpi.target }}</span>
+      <span class="kpi-actual">{{ kpi.actual }}</span>
+      <span class="badge badge-{{ kpi.status_color or 'amber' }}">{{ kpi.status }}</span>
+      <div class="kpi-actions">
+        <button class="btn btn-secondary btn-sm" onclick="toggleSection('kpiForm{{ i }}')">Edit</button>
+        <form method="POST" action="{{ url_for('delete_kpi', business_id=biz.id) }}" style="display:inline;">
+          <input type="hidden" name="idx" value="{{ i }}">
+          <button type="submit" class="btn-icon btn-danger"
+            onclick="return confirm('Remove this KPI?')">&#10005;</button>
+        </form>
+      </div>
+    </div>
+    <!-- Inline edit row -->
+    <div id="kpiForm{{ i }}" class="kpi-edit-panel" style="display:none;">
+      <form method="POST" action="{{ url_for('update_kpi', business_id=biz.id) }}"
+            style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;padding:10px 16px;background:var(--bg-secondary);">
+        <input type="hidden" name="idx" value="{{ i }}">
+        <div class="form-group" style="margin:0;flex:1;min-width:100px;">
+          <label class="form-label">Actual value</label>
+          <input type="text" name="actual" value="{{ kpi.actual }}" class="form-input">
+        </div>
+        <div class="form-group" style="margin:0;flex:1;min-width:120px;">
+          <label class="form-label">Status</label>
+          <select name="status" class="form-input">
+            {% for s in ['Not started','In progress','On track','Done','At risk'] %}
+            <option value="{{ s }}" {% if s == kpi.status %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Save</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleSection('kpiForm{{ i }}')">Cancel</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state" style="margin-bottom:16px;">
+    <div class="empty-icon">&#127919;</div>
+    <p class="empty-title">No KPIs yet</p>
+    <p class="empty-desc">Add your first indicator below to start tracking performance.</p>
+  </div>
+  {% endif %}
+
+  <!-- Add KPI form -->
+  <div class="card">
+    <p class="card-title">Add KPI indicator</p>
+    <form method="POST" action="{{ url_for('add_kpi', business_id=biz.id) }}">
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label class="form-label">Indicator name *</label>
+          <input type="text" name="indicator" class="form-input"
+                 placeholder="e.g. Monthly revenue" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Unit</label>
+          <input type="text" name="unit" class="form-input"
+                 placeholder="KES / Count / %">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target</label>
+          <input type="text" name="target" class="form-input"
+                 placeholder="e.g. 150,000">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Add KPI</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+// Revenue chart
+const chartLabels = {{ rev.chart_labels | tojson }};
+const chartData   = {{ rev.chart_data   | tojson }};
+const chartCtx    = document.getElementById('revenueChart');
+
+if (chartCtx && chartLabels.length > 0) {
+  new Chart(chartCtx, {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        label: 'Revenue (KES)',
+        data: chartData,
+        backgroundColor: 'rgba(24,95,165,0.12)',
+        borderColor:     'rgba(24,95,165,0.75)',
+        borderWidth: 1.5,
+        borderRadius: 4,
+        hoverBackgroundColor: 'rgba(24,95,165,0.22)',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => 'KES ' + ctx.parsed.y.toLocaleString()
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: v => 'KES ' + (v >= 1000 ? (v/1000).toFixed(0)+'K' : v),
+            font: { size: 11 }
+          },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        x: {
+          ticks: { font: { size: 11 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// Generic section toggle used across tabs
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isHidden = el.style.display === 'none' || el.style.display === '';
+  el.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+{% endblock %}

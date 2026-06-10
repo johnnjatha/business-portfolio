@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Portfolio Overview{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Good day, John &#128075;</h1>
+    <p class="page-sub">Your business portfolio at a glance</p>
+  </div>
+  <a href="{{ url_for('add_business_view') }}" class="btn btn-primary">+ Add business</a>
+</div>
+
+<!-- Summary metrics -->
+<div class="metrics-grid">
+  <div class="metric-card">
+    <p class="metric-label">Total businesses</p>
+    <p class="metric-value">{{ summary.count }}</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Total revenue (KES)</p>
+    <p class="metric-value">{{ "{:,.0f}".format(summary.total_revenue) }}</p>
+    {% if summary.total_revenue == 0 %}
+    <p style="font-size:11px;color:var(--text-tertiary);margin-top:3px;">Pre-revenue</p>
+    {% endif %}
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Business plans</p>
+    <p class="metric-value">{{ summary.count }}</p>
+    <p style="font-size:11px;color:var(--green);margin-top:3px;">All active</p>
+  </div>
+  <div class="metric-card">
+    <p class="metric-label">Overall stage</p>
+    <p class="metric-value" style="font-size:16px;">Building</p>
+  </div>
+</div>
+
+<!-- Business cards grid -->
+<h2 class="section-label" style="margin-top:8px;">Your businesses</h2>
+<div class="biz-grid">
+  {% for biz in summary.businesses %}
+  <a href="{{ url_for('business_detail', business_id=biz.id) }}" class="biz-card">
+    <div class="biz-card-header">
+      <div class="biz-avatar color-bg-{{ biz.color }}">
+        <span class="color-{{ biz.color }}">{{ biz.initials }}</span>
+      </div>
+      <span class="badge badge-{{ 'blue' if biz.stage == 'Building' else ('green' if biz.stage in ['Active','Scaling'] else 'amber') }}">
+        {{ biz.stage }}
+      </span>
+    </div>
+    <p class="biz-name">{{ biz.name }}</p>
+    <p class="biz-sector">{{ biz.sector }}</p>
+    <div class="biz-card-footer">
+      <span class="biz-meta">{{ biz.location }}</span>
+      <span class="biz-meta">Est. {{ biz.founded }}</span>
+    </div>
+  </a>
+  {% endfor %}
+
+  <!-- Add new card -->
+  <a href="{{ url_for('add_business_view') }}" class="biz-card biz-card-add">
+    <div class="add-icon">+</div>
+    <p class="biz-name" style="color:var(--text-secondary);">Add a business</p>
+    <p class="biz-sector">Track a new venture</p>
+  </a>
+</div>
+
+<!-- Quick tips (shown when no revenue yet) -->
+{% if summary.total_revenue == 0 %}
+<div style="margin-top:32px;">
+  <h2 class="section-label">Get started</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+    <div class="card" style="border-left:3px solid var(--blue);">
+      <p class="card-title">1. Review your business plans</p>
+      <p class="card-text">Open each business and expand the plan sections to review or update your strategy.</p>
+      <a href="{{ url_for('business_detail', business_id=summary.businesses[0].id, tab='plan') }}"
+         class="btn btn-secondary btn-sm" style="margin-top:10px;">View plan</a>
+    </div>
+    <div class="card" style="border-left:3px solid var(--amber);">
+      <p class="card-title">2. Set your KPI targets</p>
+      <p class="card-text">Add indicators and targets under the KPIs tab so you can track progress each month.</p>
+      <a href="{{ url_for('business_detail', business_id=summary.businesses[0].id, tab='kpis') }}"
+         class="btn btn-secondary btn-sm" style="margin-top:10px;">Add KPIs</a>
+    </div>
+    <div class="card" style="border-left:3px solid var(--green);">
+      <p class="card-title">3. Log your first revenue</p>
+      <p class="card-text">As soon as you earn, record it in the Revenue tab. Your trend chart will build automatically.</p>
+      <a href="{{ url_for('business_detail', business_id=summary.businesses[0].id, tab='revenue') }}"
+         class="btn btn-secondary btn-sm" style="margin-top:10px;">Log revenue</a>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

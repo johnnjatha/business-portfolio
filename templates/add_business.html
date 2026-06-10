@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Add Business{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="{{ url_for('index') }}">Portfolio</a>
+  <span>/</span>
+  <span>Add business</span>
+</div>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Add a business</h1>
+    <p class="page-sub">Fill in the details to add a new venture to your portfolio. You can edit everything later.</p>
+  </div>
+</div>
+
+<form method="POST" action="{{ url_for('add_business_view') }}">
+
+  <!-- Section 1: Basic details -->
+  <div class="card" style="margin-bottom:16px;">
+    <p class="card-title">Basic details</p>
+    <div class="form-row">
+      <div class="form-group" style="flex:2;">
+        <label class="form-label">Business name *</label>
+        <input type="text" name="name" class="form-input"
+               placeholder="e.g. Arstern Analytics" required autofocus>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sector / Industry</label>
+        <input type="text" name="sector" class="form-input"
+               placeholder="e.g. Data consultancy">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input type="text" name="location" class="form-input"
+               placeholder="Nairobi, Kenya" value="Nairobi, Kenya">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Founded year</label>
+        <input type="text" name="founded" class="form-input"
+               placeholder="2024" value="2026">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Founder</label>
+        <input type="text" name="founder" class="form-input"
+               placeholder="e.g. Sole founder" value="Sole founder">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Stage</label>
+        <select name="stage" class="form-input">
+          <option value="Idea stage">Idea stage</option>
+          <option value="Building">Building</option>
+          <option value="Active">Active</option>
+          <option value="Scaling">Scaling</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card colour</label>
+        <select name="color" class="form-input">
+          <option value="blue">Blue</option>
+          <option value="teal">Teal</option>
+          <option value="green">Green</option>
+          <option value="amber">Amber</option>
+          <option value="coral">Coral</option>
+          <option value="purple">Purple</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Short description (one sentence)</label>
+      <input type="text" name="description" class="form-input"
+             placeholder="e.g. A data consultancy delivering MEAL services to NGOs across East Africa">
+    </div>
+    <div class="form-group">
+      <label class="form-label">About (detailed narrative)</label>
+      <textarea name="about" class="form-input form-textarea"
+                placeholder="Tell the full story — what is this business, who does it serve, why does it exist?"></textarea>
+    </div>
+  </div>
+
+  <!-- Section 2: Business plan -->
+  <div class="card" style="margin-bottom:16px;">
+    <p class="card-title">Business plan</p>
+    <p class="card-text" style="margin-bottom:16px;">
+      Structured around lean startup best practices. Fill in what you know now — you can complete the rest later.
+    </p>
+    {% set fields = [
+      ('Executive summary', 'exec_summary',
+       'What is this business and why will it succeed? (2–3 sentences)'),
+      ('Problem & solution', 'problem_solution',
+       'What problem does this solve and how does your business uniquely solve it?'),
+      ('Target market', 'target_market',
+       'Who are your customers? Describe them by sector, geography, or profile.'),
+      ('Revenue model', 'revenue_model',
+       'How does this business make money? List your income streams and pricing approach.'),
+      ('Competitive advantage', 'competitive_advantage',
+       'What makes you different from alternatives? What is hard to copy?'),
+      ('Risks & mitigation', 'risks_mitigation',
+       'What could go wrong and how will you manage it?')
+    ] %}
+    {% for label, field, hint in fields %}
+    <div class="form-group">
+      <label class="form-label">{{ label }}</label>
+      <textarea name="{{ field }}" class="form-input form-textarea" placeholder="{{ hint }}"></textarea>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="form-actions" style="margin-bottom:48px;">
+    <button type="submit" class="btn btn-primary">Create business</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}
