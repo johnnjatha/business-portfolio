@@ -10,33 +10,103 @@
     "founded": "2024",
     "founder": "Sole founder",
     "description": "Arstern Analytics is a Nairobi-based data consultancy delivering MEAL system design, market intelligence, and data science services to NGOs, development organizations, and businesses across Kenya and East Africa.",
-    "about": "Arstern Analytics is built on the founder's cross-disciplinary expertise in criminology, information management, cybersecurity, and development sector MEAL — combining rigorous data methodology with on-the-ground programme experience. The firm targets a growing gap in quality, affordable data services across East Africa's NGO and SME ecosystem.",
+    "about": "Arstern Analytics is built on the founder's cross-disciplinary expertise in criminology, information management, cybersecurity, and development sector MEAL \u2014 combining rigorous data methodology with on-the-ground programme experience. The firm targets a growing gap in quality, affordable data services across East Africa's NGO and SME ecosystem.",
     "revenue_streams": [
-      {"name": "MEAL consultancy", "description": "M&E system design, data collection, reporting for NGOs", "status": "Primary", "status_color": "amber"},
-      {"name": "Market intelligence", "description": "Nairobi demand intelligence, sector trend reports", "status": "Growing", "status_color": "blue"},
-      {"name": "Training & capacity building", "description": "Data analysis, KoboToolbox, Python for MEAL", "status": "Planned", "status_color": "gray"}
+      {
+        "name": "MEAL consultancy",
+        "description": "M&E system design, data collection, reporting for NGOs",
+        "status": "Primary",
+        "status_color": "amber"
+      },
+      {
+        "name": "Market intelligence",
+        "description": "Nairobi demand intelligence, sector trend reports",
+        "status": "Growing",
+        "status_color": "blue"
+      },
+      {
+        "name": "Training & capacity building",
+        "description": "Data analysis, KoboToolbox, Python for MEAL",
+        "status": "Planned",
+        "status_color": "gray"
+      }
     ],
     "setup_progress": [
-      {"label": "Business concept", "pct": 100, "status": "Done"},
-      {"label": "Business plan", "pct": 100, "status": "Done"},
-      {"label": "Policy & governance docs", "pct": 100, "status": "Done"},
-      {"label": "Formal registration", "pct": 40, "status": "In progress"},
-      {"label": "First paying client", "pct": 0, "status": "Not started"}
+      {
+        "label": "Business concept",
+        "pct": 90,
+        "status": "In progress"
+      },
+      {
+        "label": "Business plan",
+        "pct": 100,
+        "status": "Done"
+      },
+      {
+        "label": "Policy & governance docs",
+        "pct": 100,
+        "status": "Done"
+      },
+      {
+        "label": "Formal registration",
+        "pct": 40,
+        "status": "In progress"
+      },
+      {
+        "label": "First paying client",
+        "pct": 0,
+        "status": "Not started"
+      }
     ],
     "plan": {
       "executive_summary": "Arstern Analytics is a Nairobi-based data consultancy delivering MEAL system design, market intelligence, and data science training to development sector organizations and businesses. The firm targets a growing gap in quality, affordable data services across East Africa's NGO and SME ecosystem.",
-      "problem_solution": "NGOs and SMEs in Kenya struggle with weak M&E systems, poor data quality, and limited analytical capacity. Arstern Analytics bridges this with end-to-end MEAL services — from tool design (KoboToolbox, ODK) to dashboard visualization (Looker Studio, Python) — at consultancy rates accessible to mid-tier organizations.",
+      "problem_solution": "NGOs and SMEs in Kenya struggle with weak M&E systems, poor data quality, and limited analytical capacity. Arstern Analytics bridges this with end-to-end MEAL services \u2014 from tool design (KoboToolbox, ODK) to dashboard visualization (Looker Studio, Python) \u2014 at consultancy rates accessible to mid-tier organizations.",
       "target_market": "Primary: Local and international NGOs operating in Kenya and East Africa requiring MEAL system support. Secondary: SMEs and startups needing market intelligence and data-driven decision support. Tertiary: Development sector professionals seeking upskilling in data tools.",
-      "revenue_model": "Three streams: (1) Project-based MEAL consultancy fees billed per engagement. (2) Retainer contracts with NGOs for ongoing data management. (3) Training workshops billed per cohort. Target: KES 150,000/month by end of Year 1 through a mix of 2–3 active consultancy projects.",
-      "competitive_advantage": "Rare combination of MEAL expertise, data science capability, IT governance, and cybersecurity knowledge. Built-in credibility through prior NGO programme work (BlueBiz, KWETU). Ability to deliver end-to-end — from data collection to dashboard to narrative report — without needing multiple vendors.",
+      "revenue_model": "Three streams: (1) Project-based MEAL consultancy fees billed per engagement. (2) Retainer contracts with NGOs for ongoing data management. (3) Training workshops billed per cohort. Target: KES 150,000/month by end of Year 1 through a mix of 2\u20133 active consultancy projects.",
+      "competitive_advantage": "Rare combination of MEAL expertise, data science capability, IT governance, and cybersecurity knowledge. Built-in credibility through prior NGO programme work (BlueBiz, KWETU). Ability to deliver end-to-end \u2014 from data collection to dashboard to narrative report \u2014 without needing multiple vendors.",
       "risks_mitigation": "Key risks: slow client acquisition as a new firm, income inconsistency from project-based billing, and competition from established consultancies. Mitigation: leverage existing NGO network for early contracts, diversify across retainers and training, and build a public portfolio to demonstrate capability."
     },
     "kpis": [
-      {"indicator": "Monthly revenue", "unit": "KES", "target": "150,000", "actual": "0", "status": "Not started", "status_color": "amber"},
-      {"indicator": "Active clients", "unit": "Count", "target": "3", "actual": "0", "status": "Not started", "status_color": "amber"},
-      {"indicator": "Projects delivered", "unit": "This year", "target": "5", "actual": "0", "status": "Not started", "status_color": "amber"},
-      {"indicator": "Training cohorts", "unit": "This year", "target": "2", "actual": "0", "status": "Not started", "status_color": "amber"},
-      {"indicator": "Business registration", "unit": "Milestone", "target": "Q3 2026", "actual": "—", "status": "In progress", "status_color": "blue"}
+      {
+        "indicator": "Monthly revenue",
+        "unit": "KES",
+        "target": "150,000",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Active clients",
+        "unit": "Count",
+        "target": "3",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Projects delivered",
+        "unit": "This year",
+        "target": "5",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Training cohorts",
+        "unit": "This year",
+        "target": "2",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Business registration",
+        "unit": "Milestone",
+        "target": "Q3 2026",
+        "actual": "\u2014",
+        "status": "In progress",
+        "status_color": "blue"
+      }
     ]
   },
   {
@@ -52,30 +122,93 @@
     "description": "TOCARE is an NGO concept focused on community care, social welfare, and development programming for vulnerable populations in Kenya.",
     "about": "TOCARE is being developed as a non-governmental organization with a mission centred on care, dignity, and community empowerment. The concept draws on the founder's development sector experience across programme design, MEAL, and data management to build a credible and impact-driven organization.",
     "revenue_streams": [
-      {"name": "Donor grants", "description": "Institutional funding from bilateral and multilateral donors", "status": "Primary", "status_color": "amber"},
-      {"name": "Community programmes", "description": "Funded social welfare and development projects", "status": "Planned", "status_color": "gray"},
-      {"name": "Partnerships", "description": "Co-implementation with NGO and government partners", "status": "Planned", "status_color": "gray"}
+      {
+        "name": "Donor grants",
+        "description": "Institutional funding from bilateral and multilateral donors",
+        "status": "Primary",
+        "status_color": "amber"
+      },
+      {
+        "name": "Community programmes",
+        "description": "Funded social welfare and development projects",
+        "status": "Planned",
+        "status_color": "gray"
+      },
+      {
+        "name": "Partnerships",
+        "description": "Co-implementation with NGO and government partners",
+        "status": "Planned",
+        "status_color": "gray"
+      }
     ],
     "setup_progress": [
-      {"label": "Organizational concept", "pct": 100, "status": "Done"},
-      {"label": "Policy & governance suite", "pct": 100, "status": "Done"},
-      {"label": "MEAL framework", "pct": 80, "status": "In progress"},
-      {"label": "NGO registration", "pct": 10, "status": "Early stage"},
-      {"label": "First funded project", "pct": 0, "status": "Not started"}
+      {
+        "label": "Organizational concept",
+        "pct": 100,
+        "status": "Done"
+      },
+      {
+        "label": "Policy & governance suite",
+        "pct": 100,
+        "status": "Done"
+      },
+      {
+        "label": "MEAL framework",
+        "pct": 80,
+        "status": "In progress"
+      },
+      {
+        "label": "NGO registration",
+        "pct": 10,
+        "status": "Early stage"
+      },
+      {
+        "label": "First funded project",
+        "pct": 0,
+        "status": "Not started"
+      }
     ],
     "plan": {
       "executive_summary": "TOCARE is a Kenyan NGO concept focused on community care and social welfare programming. It aims to deliver evidence-based interventions for vulnerable populations through well-structured programmes anchored in strong MEAL systems.",
       "problem_solution": "Many Kenyan communities lack access to quality social welfare support. TOCARE addresses this through targeted community programmes, leveraging strong M&E systems to demonstrate impact to donors and stakeholders.",
-      "target_market": "Vulnerable populations in Kenya — youth, women, and low-income households. Institutional donors and foundations seeking credible local implementing partners with strong accountability frameworks.",
+      "target_market": "Vulnerable populations in Kenya \u2014 youth, women, and low-income households. Institutional donors and foundations seeking credible local implementing partners with strong accountability frameworks.",
       "revenue_model": "Grant-based funding from bilateral donors (USAID, EU, FCDO), multilateral agencies (UNICEF, UNDP), and private foundations. Co-funding arrangements with government line ministries for community programmes.",
       "competitive_advantage": "Strong institutional documentation, donor-ready MEAL systems, and deep development sector experience from the outset. Positions TOCARE as a credible, accountable partner from day one rather than building these systems retrospectively.",
       "risks_mitigation": "Key risks: competitive grant environment, long lead time to first funding, and capacity constraints as a startup NGO. Mitigation: begin with small sub-grants, partner with established NGOs, and build a demonstrable track record through community-level programming."
     },
     "kpis": [
-      {"indicator": "NGO registration", "unit": "Milestone", "target": "Q4 2026", "actual": "—", "status": "Early stage", "status_color": "amber"},
-      {"indicator": "Grant applications submitted", "unit": "Count", "target": "3", "actual": "0", "status": "Not started", "status_color": "amber"},
-      {"indicator": "Partnerships established", "unit": "Count", "target": "2", "actual": "0", "status": "Not started", "status_color": "amber"},
-      {"indicator": "Beneficiaries reached", "unit": "People", "target": "500", "actual": "0", "status": "Not started", "status_color": "amber"}
+      {
+        "indicator": "NGO registration",
+        "unit": "Milestone",
+        "target": "Q4 2026",
+        "actual": "\u2014",
+        "status": "Early stage",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Grant applications submitted",
+        "unit": "Count",
+        "target": "3",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Partnerships established",
+        "unit": "Count",
+        "target": "2",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      },
+      {
+        "indicator": "Beneficiaries reached",
+        "unit": "People",
+        "target": "500",
+        "actual": "0",
+        "status": "Not started",
+        "status_color": "amber"
+      }
     ]
   }
 ]
